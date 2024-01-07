@@ -56,7 +56,7 @@ $ docker-compose up
 а так же с реализацией блока пользователей, как примера CRUD.
 Рутовый пользователь - u:root@gmail.com p:root
 
-## Stay in touch
+## Авторы
 
 - Author - [ASt](https://github.com/ast39)
 - Telegram - [@ASt39](https://t.me/ASt39)
