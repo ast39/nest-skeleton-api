@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
 import { UserDto } from './dto/user.dto';
 import { UserRepository } from './user.repository';
 import { UserFilterDto } from './dto/user.filter.dto';
@@ -9,6 +8,10 @@ import {
   UserNotFoundException,
 } from './exeptions/user.exeptions';
 import { PrismaService } from '../../prisma';
+import {
+  IUserCreate,
+  IUserUpdate,
+} from '../../common/interfaces/user.interface';
 
 @Injectable()
 export class UserService {
@@ -71,7 +74,7 @@ export class UserService {
   }
 
   // Добавление пользователя
-  async createUser(data: Prisma.UserCreateInput): Promise<UserDto> {
+  async createUser(data: IUserCreate): Promise<UserDto> {
     return this.prisma.$transaction(async (tx) => {
       const user = await this.getUserByEmail(data.email);
       if (user) {
@@ -85,10 +88,7 @@ export class UserService {
   }
 
   // Обновление пользователя
-  async updateUser(
-    userId: number,
-    data: Prisma.UserUpdateInput,
-  ): Promise<UserDto> {
+  async updateUser(userId: number, data: IUserUpdate): Promise<UserDto> {
     return this.prisma.$transaction(async (tx) => {
       await this.getUser(userId);
 

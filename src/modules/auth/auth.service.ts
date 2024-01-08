@@ -9,7 +9,7 @@ import {
 import { LoginDto } from './dto/login.dto';
 import { UserDto } from '../user/dto/user.dto';
 import { ConfigService } from '@nestjs/config';
-import { Prisma } from '@prisma/client';
+import { IUserCreate } from '../../common/interfaces/user.interface';
 
 @Injectable()
 export class AuthService {
@@ -20,7 +20,7 @@ export class AuthService {
   ) {}
 
   // Регистрация
-  async signUp(@Body() userCreate: Prisma.UserCreateInput) {
+  async signUp(@Body() userCreate: IUserCreate) {
     const user = await this.userService.createUser(userCreate);
 
     const tokens = await this.generateTokens(user);

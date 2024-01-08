@@ -16,8 +16,11 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { UserDto } from './dto/user.dto';
-import { Prisma } from '@prisma/client';
 import { AccessTokenGuard } from '../../common/guards/accessToken.guard';
+import {
+  IUserCreate,
+  IUserUpdate,
+} from '../../common/interfaces/user.interface';
 
 @ApiTags('Пользователи')
 @Controller('user')
@@ -74,7 +77,7 @@ export class UserController {
   @ApiBearerAuth()
   @UseGuards(AccessTokenGuard)
   @Post()
-  public async create(@Body() body: Prisma.UserCreateInput): Promise<UserDto> {
+  public async create(@Body() body: IUserCreate): Promise<UserDto> {
     return await this.userService.createUser(body);
   }
 
@@ -93,7 +96,7 @@ export class UserController {
   @Put(':user_id')
   public async update(
     @Param('user_id') userId: number,
-    @Body() body: Prisma.UserUpdateInput,
+    @Body() body: IUserUpdate,
   ): Promise<UserDto> {
     return await this.userService.updateUser(userId, body);
   }

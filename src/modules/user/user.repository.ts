@@ -1,7 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { IPrismaTR, PrismaService } from '../../prisma';
 import { UserDto } from './dto/user.dto';
-import { Prisma } from '@prisma/client';
+import {
+  IUserCreate,
+  IUserFilter,
+  IUserOrder,
+  IUserUnique,
+  IUserUpdate,
+} from '../../common/interfaces/user.interface';
 
 @Injectable()
 export class UserRepository {
@@ -12,11 +18,11 @@ export class UserRepository {
     params: {
       skip?: number;
       take?: number;
-      cursor?: Prisma.UserWhereUniqueInput;
-      where?: Prisma.UserWhereInput;
-      orderBy?: Prisma.UserOrderByWithRelationInput;
+      cursor?: IUserUnique;
+      where?: IUserFilter;
+      orderBy?: IUserOrder;
     },
-    tx: IPrismaTR,
+    tx?: IPrismaTR,
   ): Promise<UserDto[]> {
     const { skip, take, cursor, where, orderBy } = params;
     const prisma = tx ?? this.prisma;
@@ -31,10 +37,7 @@ export class UserRepository {
   }
 
   // Пользователь по ID
-  async show(
-    cursor: Prisma.UserWhereUniqueInput,
-    tx: IPrismaTR,
-  ): Promise<UserDto | null> {
+  async show(cursor: IUserUnique, tx?: IPrismaTR): Promise<UserDto | null> {
     const prisma = tx ?? this.prisma;
 
     return prisma.user.findUnique({
@@ -43,7 +46,7 @@ export class UserRepository {
   }
 
   // Добавление пользователя
-  async store(data: Prisma.UserCreateInput, tx: IPrismaTR): Promise<UserDto> {
+  async store(data: IUserCreate, tx?: IPrismaTR): Promise<UserDto> {
     const prisma = tx ?? this.prisma;
 
     return prisma.user.create({
@@ -54,10 +57,10 @@ export class UserRepository {
   // Обновление пользователя
   async update(
     params: {
-      where: Prisma.UserWhereUniqueInput;
-      data: Prisma.UserUpdateInput;
+      where: IUserUnique;
+      data: IUserUpdate;
     },
-    tx: IPrismaTR,
+    tx?: IPrismaTR,
   ): Promise<UserDto> {
     const { where, data } = params;
     const prisma = tx ?? this.prisma;
@@ -69,10 +72,7 @@ export class UserRepository {
   }
 
   // Удаление пользователя
-  async destroy(
-    where: Prisma.UserWhereUniqueInput,
-    tx: IPrismaTR,
-  ): Promise<UserDto> {
+  async destroy(where: IUserUnique, tx?: IPrismaTR): Promise<UserDto> {
     const prisma = tx ?? this.prisma;
 
     return prisma.user.delete({

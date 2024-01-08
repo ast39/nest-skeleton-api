@@ -9,10 +9,10 @@ import { AuthService } from './auth.service';
 import { IJwtToken } from '../../common/interfaces/jwt.interface';
 import { LoginDto } from './dto/login.dto';
 import { UserDto } from '../user/dto/user.dto';
-import { JwtUser } from '../../common/decorators/user.decorator';
-import { Prisma } from '@prisma/client';
 import { AccessTokenGuard } from '../../common/guards/accessToken.guard';
-import { RefreshTokenGuard } from "../../common/guards/refreshToken.guard";
+import { RefreshTokenGuard } from '../../common/guards/refreshToken.guard';
+import { IUserCreate } from '../../common/interfaces/user.interface';
+import { JwtUser } from '../../common/decorators/user.decorator';
 
 @ApiTags('Авторизация')
 @Controller('auth')
@@ -27,9 +27,7 @@ export class AuthController {
     status: 201,
   })
   @Post('signup')
-  async registration(
-    @Body() createUser: Prisma.UserCreateInput,
-  ): Promise<IJwtToken> {
+  async registration(@Body() createUser: IUserCreate): Promise<IJwtToken> {
     return await this.authService.signUp(createUser);
   }
 
