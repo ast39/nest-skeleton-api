@@ -24,3 +24,7 @@ COPY --from=builder /app/prisma ./prisma/
 EXPOSE 3000
 
 CMD [ "npm", "run", "start:dev" ]
+
+CMD [ "npm", "run", "prisma:generate" ]
+CMD [ "npm", "run", "prisma:migrate:dev" ]
+CMD [ "npm", "run", "prisma:seed" ]
