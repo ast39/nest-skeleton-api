@@ -8,19 +8,22 @@ import {
   Delete,
   UseGuards,
 } from '@nestjs/common';
-import { UserService } from './user.service';
 import {
   ApiBearerAuth,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
+import { UserCreateSchema } from './schemas/user.crate.schema';
+import { UserUpdateSchema } from './schemas/user.update.schema';
+import { UserService } from './user.service';
 import { UserDto } from './dto/user.dto';
 import { AccessTokenGuard } from '../../common/guards/accessToken.guard';
 import {
   IUserCreate,
   IUserUpdate,
 } from '../../common/interfaces/user.interface';
+import { JoiPipe } from 'nestjs-joi';
 
 @ApiTags('Пользователи')
 @Controller('user')
@@ -40,7 +43,7 @@ export class UserController {
   @ApiBearerAuth()
   @UseGuards(AccessTokenGuard)
   @Get()
-  index(): Promise<UserDto[]> {
+  public async index(): Promise<UserDto[]> {
     return this.userService.userList({
       page: 1,
       limit: 10,
@@ -60,7 +63,7 @@ export class UserController {
   @ApiBearerAuth()
   @UseGuards(AccessTokenGuard)
   @Get(':user_id')
-  show(@Param('user_id') userId: number): Promise<UserDto> {
+  public async show(@Param('user_id') userId: number): Promise<UserDto> {
     return this.userService.getUser(userId);
   }
 
@@ -77,7 +80,9 @@ export class UserController {
   @ApiBearerAuth()
   @UseGuards(AccessTokenGuard)
   @Post()
-  public async create(@Body() body: IUserCreate): Promise<UserDto> {
+  public async create(
+    @Body(new JoiPipe(UserCreateSchema)) body: IUserCreate,
+  ): Promise<UserDto> {
     return await this.userService.createUser(body);
   }
 
@@ -96,7 +101,7 @@ export class UserController {
   @Put(':user_id')
   public async update(
     @Param('user_id') userId: number,
-    @Body() body: IUserUpdate,
+    @Body(new JoiPipe(UserUpdateSchema)) body: IUserUpdate,
   ): Promise<UserDto> {
     return await this.userService.updateUser(userId, body);
   }

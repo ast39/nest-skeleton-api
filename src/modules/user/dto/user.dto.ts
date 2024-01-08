@@ -1,5 +1,5 @@
-import { EUserRole, EUserStatus } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
+import { EUserRole, EUserStatus } from '@prisma/client';
 
 export class UserDto {
   @ApiProperty({

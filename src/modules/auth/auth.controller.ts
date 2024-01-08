@@ -5,6 +5,8 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
+import { JwtUser } from '../../common/decorators/user.decorator';
+import { UserCreateSchema } from '../user/schemas/user.crate.schema';
 import { AuthService } from './auth.service';
 import { IJwtToken } from '../../common/interfaces/jwt.interface';
 import { LoginDto } from './dto/login.dto';
@@ -12,7 +14,8 @@ import { UserDto } from '../user/dto/user.dto';
 import { AccessTokenGuard } from '../../common/guards/accessToken.guard';
 import { RefreshTokenGuard } from '../../common/guards/refreshToken.guard';
 import { IUserCreate } from '../../common/interfaces/user.interface';
-import { JwtUser } from '../../common/decorators/user.decorator';
+import { JoiPipe } from 'nestjs-joi';
+import { AuthLoginSchema } from './schemas/auth.login.schema';
 
 @ApiTags('Авторизация')
 @Controller('auth')
@@ -27,7 +30,9 @@ export class AuthController {
     status: 201,
   })
   @Post('signup')
-  async registration(@Body() createUser: IUserCreate): Promise<IJwtToken> {
+  async registration(
+    @Body(new JoiPipe(UserCreateSchema)) createUser: IUserCreate,
+  ): Promise<IJwtToken> {
     return await this.authService.signUp(createUser);
   }
 
@@ -39,7 +44,9 @@ export class AuthController {
     status: 200,
   })
   @Post('signin')
-  async login(@Body() loginDto: LoginDto): Promise<IJwtToken> {
+  async login(
+    @Body(new JoiPipe(AuthLoginSchema)) loginDto: LoginDto,
+  ): Promise<IJwtToken> {
     return await this.authService.signIn(loginDto);
   }
 
@@ -50,6 +57,7 @@ export class AuthController {
     isArray: false,
     status: 200,
   })
+  @ApiBearerAuth()
   @UseGuards(RefreshTokenGuard)
   @Get('refresh')
   refreshTokens(
