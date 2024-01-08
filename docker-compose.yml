@@ -12,11 +12,6 @@ services:
       - .env
     ports:
       - "3000:3000"
-      - "9229:9229"
-    volumes:
-      - .:/app
-      - /app/node_modules
-    command: npm run start:dev
     depends_on:
       - db
     restart: always
@@ -31,7 +26,7 @@ services:
     environment:
       PG_DATA: /var/lib/postgresql/data
     ports:
-      - "5434:5434"
+      - "5432:5432"
     volumes:
       - ./pgdata:/var/lib/postgresql/data
     restart: always

@@ -1,25 +1,25 @@
-FROM node:18.16-alpine
+FROM node:18.16-alpine AS builder
 
 WORKDIR /app
 
 COPY package*.json ./
-COPY ./prisma ./prisma
+COPY prisma ./prisma/
 
 RUN npm install
-
-RUN npm i @nestjs/config
-
-RUN npm install prisma --save-dev
-RUN npm install @prisma/client
 RUN npx prisma generate
-
-RUN npm i @nestjs/swagger
-RUN npm i @nestjs/jwt bcryptjs
-RUN npm i @types/bcryptjs
 
 COPY . .
 
-COPY ./dist ./dist
+RUN npm run build
+
+FROM node:18.16-alpine
+
+COPY --from=builder /app/node_modules ./node_modules/
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/dist ./dist/
+COPY --from=builder /app/tsconfig.build.json ./
+COPY --from=builder /app/tsconfig.json ./
+COPY --from=builder /app/prisma ./prisma/
 
 EXPOSE 3000
 
