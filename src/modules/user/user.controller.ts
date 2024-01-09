@@ -7,7 +7,8 @@ import {
   Put,
   Delete,
   UseGuards,
-} from '@nestjs/common';
+  ParseIntPipe, UsePipes
+} from "@nestjs/common";
 import {
   ApiBearerAuth,
   ApiOkResponse,
@@ -24,6 +25,7 @@ import {
   IUserUpdate,
 } from '../../common/interfaces/user.interface';
 import { JoiPipe } from 'nestjs-joi';
+import { JoiValidationPipe } from "../../common/pipes/joy.validation.pipe";
 
 @ApiTags('Пользователи')
 @Controller('user')
@@ -63,7 +65,9 @@ export class UserController {
   @ApiBearerAuth()
   @UseGuards(AccessTokenGuard)
   @Get(':user_id')
-  public async show(@Param('user_id') userId: number): Promise<UserDto> {
+  public async show(
+    @Param('user_id', ParseIntPipe) userId: number,
+  ): Promise<UserDto> {
     return this.userService.getUser(userId);
   }
 
@@ -78,11 +82,10 @@ export class UserController {
     status: 201,
   })
   @ApiBearerAuth()
-  @UseGuards(AccessTokenGuard)
+  // @UseGuards(AccessTokenGuard)
+  @UsePipes(new JoiValidationPipe(UserCreateSchema))
   @Post()
-  public async create(
-    @Body(new JoiPipe(UserCreateSchema)) body: IUserCreate,
-  ): Promise<UserDto> {
+  public async create(@Body() body: IUserCreate): Promise<UserDto> {
     return await this.userService.createUser(body);
   }
 
@@ -100,7 +103,7 @@ export class UserController {
   @UseGuards(AccessTokenGuard)
   @Put(':user_id')
   public async update(
-    @Param('user_id') userId: number,
+    @Param('user_id', ParseIntPipe) userId: number,
     @Body(new JoiPipe(UserUpdateSchema)) body: IUserUpdate,
   ): Promise<UserDto> {
     return await this.userService.updateUser(userId, body);
@@ -119,7 +122,9 @@ export class UserController {
   @ApiBearerAuth()
   @UseGuards(AccessTokenGuard)
   @Delete(':user_id')
-  public async delete(@Param('user_id') userId: number): Promise<UserDto> {
+  public async delete(
+    @Param('user_id', ParseIntPipe) userId: number,
+  ): Promise<UserDto> {
     return await this.userService.deleteUser(userId);
   }
 }

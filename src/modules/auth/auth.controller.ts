@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards, UsePipes } from "@nestjs/common";
 import {
   ApiBearerAuth,
   ApiOkResponse,
@@ -16,6 +16,7 @@ import { RefreshTokenGuard } from '../../common/guards/refreshToken.guard';
 import { IUserCreate } from '../../common/interfaces/user.interface';
 import { JoiPipe } from 'nestjs-joi';
 import { AuthLoginSchema } from './schemas/auth.login.schema';
+import { JoiValidationPipe } from '../../common/pipes/joy.validation.pipe';
 
 @ApiTags('Авторизация')
 @Controller('auth')
@@ -29,10 +30,9 @@ export class AuthController {
     isArray: false,
     status: 201,
   })
+  @UsePipes(new JoiValidationPipe(UserCreateSchema))
   @Post('signup')
-  async registration(
-    @Body(new JoiPipe(UserCreateSchema)) createUser: IUserCreate,
-  ): Promise<IJwtToken> {
+  async registration(@Body() createUser: IUserCreate): Promise<IJwtToken> {
     return await this.authService.signUp(createUser);
   }
 
@@ -43,10 +43,9 @@ export class AuthController {
     isArray: false,
     status: 200,
   })
+  @UsePipes(new JoiValidationPipe(AuthLoginSchema))
   @Post('signin')
-  async login(
-    @Body(new JoiPipe(AuthLoginSchema)) loginDto: LoginDto,
-  ): Promise<IJwtToken> {
+  async login(@Body() loginDto: LoginDto): Promise<IJwtToken> {
     return await this.authService.signIn(loginDto);
   }
 

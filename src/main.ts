@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as process from 'process';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const APP_PORT = process.env.APP_PORT || 3000;
@@ -13,6 +14,7 @@ async function bootstrap() {
     credentials: true,
   });
   app.setGlobalPrefix('/api');
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   const config = new DocumentBuilder()
     .setTitle('SKELETON API')

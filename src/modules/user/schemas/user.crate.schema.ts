@@ -2,7 +2,7 @@ import { EUserRole, EUserStatus } from '@prisma/client';
 import * as Joi from 'joi';
 
 export const UserCreateSchema = Joi.object({
-  email: Joi.string().required().max(128),
+  email: Joi.string().email().required().max(128),
   password: Joi.string().optional().max(128),
   firstName: Joi.string().required().max(128),
   lastName: Joi.string().required().max(128),
@@ -12,4 +12,7 @@ export const UserCreateSchema = Joi.object({
   status: Joi.string()
     .valid(...Object.values(EUserStatus))
     .optional(),
+}).options({
+  abortEarly: false,
+  allowUnknown: true,
 });
