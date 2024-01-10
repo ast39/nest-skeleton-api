@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { EUserRole, EUserStatus } from '@prisma/client';
+import { EUserStatus } from '@prisma/client';
+import { RoleDto } from "../../role/dto/role.dto";
 
 export class UserDto {
   @ApiProperty({
@@ -46,16 +47,18 @@ export class UserDto {
   lastName: string;
 
   @ApiProperty({
-    title: 'Права',
-    description: 'Права пользователя',
-    enum: EUserRole,
-  })
-  role: EUserRole;
-
-  @ApiProperty({
     title: 'Статус',
     description: 'Статус пользователя',
     enum: EUserStatus,
   })
   status: EUserStatus;
+
+  @ApiProperty({
+    title: 'Статус',
+    description: 'Статус пользователя',
+    type: RoleDto,
+    isArray: true,
+    default: null,
+  })
+  roles?: RoleDto[];
 }

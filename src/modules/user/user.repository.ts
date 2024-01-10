@@ -27,12 +27,23 @@ export class UserRepository {
     const { skip, take, cursor, where, orderBy } = params;
     const prisma = tx ?? this.prisma;
 
-    return prisma.user.findMany({
+    const users = await prisma.user.findMany({
       skip,
       take,
       cursor,
       where,
       orderBy,
+      include: {
+        userRoles: {
+          include: {
+            role: true,
+          },
+        },
+      },
+    });
+
+    return users.map((user) => {
+      return { ...user, roles: user.userRoles.map((role) => role.role) };
     });
   }
 
@@ -40,18 +51,36 @@ export class UserRepository {
   async show(cursor: IUserUnique, tx?: IPrismaTR): Promise<UserDto | null> {
     const prisma = tx ?? this.prisma;
 
-    return prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: cursor,
+      include: {
+        userRoles: {
+          include: {
+            role: true,
+          },
+        },
+      },
     });
+
+    return { ...user, roles: user.userRoles.map((role) => role.role) };
   }
 
   // Добавление пользователя
   async store(data: IUserCreate, tx?: IPrismaTR): Promise<UserDto> {
     const prisma = tx ?? this.prisma;
 
-    return prisma.user.create({
+    const user = await prisma.user.create({
       data,
+      include: {
+        userRoles: {
+          include: {
+            role: true,
+          },
+        },
+      },
     });
+
+    return { ...user, roles: user.userRoles.map((role) => role.role) };
   }
 
   // Обновление пользователя
@@ -65,18 +94,36 @@ export class UserRepository {
     const { where, data } = params;
     const prisma = tx ?? this.prisma;
 
-    return prisma.user.update({
+    const user = await prisma.user.update({
       data,
       where,
+      include: {
+        userRoles: {
+          include: {
+            role: true,
+          },
+        },
+      },
     });
+
+    return { ...user, roles: user.userRoles.map((role) => role.role) };
   }
 
   // Удаление пользователя
   async destroy(where: IUserUnique, tx?: IPrismaTR): Promise<UserDto> {
     const prisma = tx ?? this.prisma;
 
-    return prisma.user.delete({
+    const user = await prisma.user.delete({
       where,
+      include: {
+        userRoles: {
+          include: {
+            role: true,
+          },
+        },
+      },
     });
+
+    return { ...user, roles: user.userRoles.map((role) => role.role) };
   }
 }

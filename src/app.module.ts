@@ -5,6 +5,7 @@ import { PrismaModule } from './prisma';
 import { AuthModule } from './modules/auth/auth.module';
 import { FileModule } from './modules/file/file.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { RoleModule } from './modules/role/role.module';
 import * as path from 'path';
 console.info(path.resolve(__dirname, 'static'));
 @Module({
@@ -19,6 +20,7 @@ console.info(path.resolve(__dirname, 'static'));
     UserModule,
     AuthModule,
     FileModule,
+    RoleModule,
   ],
   controllers: [],
   providers: [],

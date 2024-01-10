@@ -30,7 +30,6 @@ export class UserService {
           skip: (page - 1) * limit,
           take: limit,
           where: {
-            role: userFilter.role != null ? userFilter.role : undefined,
             status: userFilter.status != null ? userFilter.status : undefined,
           },
           orderBy: { userId: 'desc' },

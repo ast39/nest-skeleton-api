@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { EUserStatus } from '@prisma/client';
 
-export class UserFilterDto {
+export class RoleFilterDto {
   @ApiProperty({
     minimum: 1,
     maximum: 10000,
@@ -25,12 +24,4 @@ export class UserFilterDto {
     required: false,
   })
   limit?: number | null;
-
-  @ApiProperty({
-    title: 'Status',
-    description: 'Статус пользователя',
-    enum: EUserStatus,
-    required: false,
-  })
-  status?: EUserStatus | null;
 }
