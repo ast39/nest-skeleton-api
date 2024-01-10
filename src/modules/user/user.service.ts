@@ -81,6 +81,7 @@ export class UserService {
         throw new UserEmailExistException();
       }
 
+      data.password = data.password ?? Math.random().toString(36).slice(-8);
       data.password = await bcrypt.hash(data.password, 10);
 
       return this.userRepo.store(data, tx);

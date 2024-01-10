@@ -23,6 +23,15 @@ model User {
   @@map("users")
 }
 
+model File {
+  fileId   Int      @id @default(autoincrement()) @map("file_id")
+  fileName String   @unique @map("title") @db.VarChar(128)
+  fileType String   @map("type") @db.VarChar(128)
+  uploadAt DateTime @default(now()) @map("upload_at") @db.Timestamptz(3)
+
+  @@map("files")
+}
+
 enum EUserRole {
   ROOT
   ADMIN

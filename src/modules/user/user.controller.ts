@@ -7,8 +7,9 @@ import {
   Put,
   Delete,
   UseGuards,
-  ParseIntPipe, UsePipes
-} from "@nestjs/common";
+  ParseIntPipe,
+  UsePipes,
+} from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOkResponse,
@@ -25,7 +26,7 @@ import {
   IUserUpdate,
 } from '../../common/interfaces/user.interface';
 import { JoiPipe } from 'nestjs-joi';
-import { JoiValidationPipe } from "../../common/pipes/joy.validation.pipe";
+import { JoiValidationPipe } from '../../common/pipes/joy.validation.pipe';
 
 @ApiTags('Пользователи')
 @Controller('user')
