@@ -7,3 +7,4 @@ export type IUserUpdate = Prisma.UserUpdateInput;
 export type IUserFilter = Prisma.UserWhereInput;
 export type IUserUnique = Prisma.UserWhereUniqueInput;
 export type IUserOrder = Prisma.UserOrderByWithRelationInput;
+export type IUserRole = Prisma.UserRolesCreateNestedManyWithoutUserInput;

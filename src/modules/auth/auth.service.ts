@@ -9,7 +9,7 @@ import {
 import { LoginDto } from './dto/login.dto';
 import { UserDto } from '../user/dto/user.dto';
 import { ConfigService } from '@nestjs/config';
-import { IUserCreate } from '../../common/interfaces/user.interface';
+import { UserCreateDto } from '../user/dto/user.create.dto';
 
 @Injectable()
 export class AuthService {
@@ -20,7 +20,7 @@ export class AuthService {
   ) {}
 
   // Регистрация
-  async signUp(@Body() userCreate: IUserCreate) {
+  async signUp(@Body() userCreate: UserCreateDto) {
     const user = await this.userService.createUser(userCreate);
 
     const tokens = await this.generateTokens(user);

@@ -8,10 +8,8 @@ import {
   UserNotFoundException,
 } from './exeptions/user.exeptions';
 import { PrismaService } from '../../prisma';
-import {
-  IUserCreate,
-  IUserUpdate,
-} from '../../common/interfaces/user.interface';
+import { UserCreateDto } from './dto/user.create.dto';
+import { UserUpdateDto } from './dto/user.update.dto';
 
 @Injectable()
 export class UserService {
@@ -73,7 +71,7 @@ export class UserService {
   }
 
   // Добавление пользователя
-  async createUser(data: IUserCreate): Promise<UserDto> {
+  async createUser(data: UserCreateDto): Promise<UserDto> {
     return this.prisma.$transaction(async (tx) => {
       const user = await this.getUserByEmail(data.email);
       if (user) {
@@ -83,12 +81,12 @@ export class UserService {
       data.password = data.password ?? Math.random().toString(36).slice(-8);
       data.password = await bcrypt.hash(data.password, 10);
 
-      return this.userRepo.store(data, tx);
+      return await this.userRepo.store(data, tx);
     });
   }
 
   // Обновление пользователя
-  async updateUser(userId: number, data: IUserUpdate): Promise<UserDto> {
+  async updateUser(userId: number, data: UserUpdateDto): Promise<UserDto> {
     return this.prisma.$transaction(async (tx) => {
       await this.getUser(userId);
 

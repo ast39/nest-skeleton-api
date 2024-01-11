@@ -2,12 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { IPrismaTR, PrismaService } from '../../prisma';
 import { UserDto } from './dto/user.dto';
 import {
-  IUserCreate,
   IUserFilter,
   IUserOrder,
   IUserUnique,
   IUserUpdate,
 } from '../../common/interfaces/user.interface';
+import { UserCreateDto } from './dto/user.create.dto';
 
 @Injectable()
 export class UserRepository {
@@ -43,7 +43,7 @@ export class UserRepository {
     });
 
     return users.map((user) => {
-      return { ...user, roles: user.userRoles.map((role) => role.role) };
+      return { ...user, userRoles: user.userRoles.map((role) => role.role) };
     });
   }
 
@@ -62,25 +62,36 @@ export class UserRepository {
       },
     });
 
-    return { ...user, roles: user.userRoles.map((role) => role.role) };
+    return { ...user, userRoles: user.userRoles.map((role) => role.role) };
   }
 
   // Добавление пользователя
-  async store(data: IUserCreate, tx?: IPrismaTR): Promise<UserDto> {
+  async store(data: UserCreateDto, tx?: IPrismaTR): Promise<UserDto> {
     const prisma = tx ?? this.prisma;
 
     const user = await prisma.user.create({
-      data,
-      include: {
-        userRoles: {
-          include: {
-            role: true,
-          },
-        },
+      data: {
+        email: data.email,
+        password: data.password,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        status: data.status,
       },
     });
 
-    return { ...user, roles: user.userRoles.map((role) => role.role) };
+    const roles = [];
+    for (const role of data.roles) {
+      roles.push(
+        await prisma.userRoles.create({
+          data: {
+            userId: user.userId,
+            roleId: role,
+          },
+        }),
+      );
+    }
+
+    return { ...user, userRoles: roles };
   }
 
   // Обновление пользователя
@@ -106,7 +117,7 @@ export class UserRepository {
       },
     });
 
-    return { ...user, roles: user.userRoles.map((role) => role.role) };
+    return { ...user, userRoles: user.userRoles.map((role) => role.role) };
   }
 
   // Удаление пользователя
@@ -124,6 +135,6 @@ export class UserRepository {
       },
     });
 
-    return { ...user, roles: user.userRoles.map((role) => role.role) };
+    return { ...user, userRoles: user.userRoles.map((role) => role.role) };
   }
 }

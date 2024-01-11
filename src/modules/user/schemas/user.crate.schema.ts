@@ -9,7 +9,8 @@ export const UserCreateSchema = Joi.object({
   roles: Joi.array().required().items(Joi.number()),
   status: Joi.string()
     .valid(...Object.values(EUserStatus))
-    .optional(),
+    .optional()
+    .default(EUserStatus.ACTIVE),
 }).options({
   abortEarly: false,
   allowUnknown: true,

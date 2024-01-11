@@ -1,4 +1,11 @@
-import { Body, Controller, Get, Post, UseGuards, UsePipes } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  UseGuards,
+  UsePipes,
+} from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOkResponse,
@@ -13,10 +20,9 @@ import { LoginDto } from './dto/login.dto';
 import { UserDto } from '../user/dto/user.dto';
 import { AccessTokenGuard } from '../../common/guards/accessToken.guard';
 import { RefreshTokenGuard } from '../../common/guards/refreshToken.guard';
-import { IUserCreate } from '../../common/interfaces/user.interface';
-import { JoiPipe } from 'nestjs-joi';
 import { AuthLoginSchema } from './schemas/auth.login.schema';
 import { JoiValidationPipe } from '../../common/pipes/joy.validation.pipe';
+import { UserCreateDto } from '../user/dto/user.create.dto';
 
 @ApiTags('Авторизация')
 @Controller('auth')
@@ -32,7 +38,7 @@ export class AuthController {
   })
   @UsePipes(new JoiValidationPipe(UserCreateSchema))
   @Post('signup')
-  async registration(@Body() createUser: IUserCreate): Promise<IJwtToken> {
+  async registration(@Body() createUser: UserCreateDto): Promise<IJwtToken> {
     return await this.authService.signUp(createUser);
   }
 

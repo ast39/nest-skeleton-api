@@ -21,12 +21,10 @@ import { UserUpdateSchema } from './schemas/user.update.schema';
 import { UserService } from './user.service';
 import { UserDto } from './dto/user.dto';
 import { AccessTokenGuard } from '../../common/guards/accessToken.guard';
-import {
-  IUserCreate,
-  IUserUpdate,
-} from '../../common/interfaces/user.interface';
 import { JoiPipe } from 'nestjs-joi';
 import { JoiValidationPipe } from '../../common/pipes/joy.validation.pipe';
+import { UserCreateDto } from './dto/user.create.dto';
+import { UserUpdateDto } from './dto/user.update.dto';
 
 @ApiTags('Пользователи')
 @Controller('user')
@@ -86,7 +84,7 @@ export class UserController {
   // @UseGuards(AccessTokenGuard)
   @UsePipes(new JoiValidationPipe(UserCreateSchema))
   @Post()
-  public async create(@Body() body: IUserCreate): Promise<UserDto> {
+  public async create(@Body() body: UserCreateDto): Promise<UserDto> {
     return await this.userService.createUser(body);
   }
 
@@ -105,7 +103,7 @@ export class UserController {
   @Put(':user_id')
   public async update(
     @Param('user_id', ParseIntPipe) userId: number,
-    @Body(new JoiPipe(UserUpdateSchema)) body: IUserUpdate,
+    @Body(new JoiPipe(UserUpdateSchema)) body: UserUpdateDto,
   ): Promise<UserDto> {
     return await this.userService.updateUser(userId, body);
   }

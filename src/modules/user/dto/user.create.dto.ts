@@ -1,19 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { EUserStatus } from '@prisma/client';
-import { RoleDto } from "../../role/dto/role.dto";
 
-export class UserDto {
-  @ApiProperty({
-    title: 'ID',
-    description: 'ID пользователя',
-    type: Number,
-  })
-  userId: number;
-
+// Объект добавления пользователя
+export class UserCreateDto {
   @ApiProperty({
     title: 'E-mail',
     description: 'E-mail пользователя',
     type: String,
+    required: true,
   })
   email: string;
 
@@ -22,20 +16,15 @@ export class UserDto {
     description: 'Пароль пользователя',
     type: String,
     required: false,
+    default: String,
   })
   password?: string;
-
-  @ApiProperty({
-    title: 'Токен Remember Me',
-    description: 'Токен Remember Me',
-    type: String,
-  })
-  refreshToken: string;
 
   @ApiProperty({
     title: 'Имя',
     description: 'Имя пользователя',
     type: String,
+    required: true,
   })
   firstName: string;
 
@@ -43,6 +32,7 @@ export class UserDto {
     title: 'Фамилия',
     description: 'Фамилия пользователя',
     type: String,
+    required: true,
   })
   lastName: string;
 
@@ -50,15 +40,18 @@ export class UserDto {
     title: 'Статус',
     description: 'Статус пользователя',
     enum: EUserStatus,
+    required: false,
+    default: EUserStatus.ACTIVE,
   })
-  status: EUserStatus;
+  status?: EUserStatus;
 
   @ApiProperty({
-    title: 'Статус',
-    description: 'Статус пользователя',
-    type: RoleDto,
+    title: 'Роли',
+    description: 'Роли пользователя',
+    type: Array<number>,
+    required: true,
     isArray: true,
     default: null,
   })
-  userRoles?: RoleDto[];
+  roles: number[];
 }

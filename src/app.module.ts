@@ -7,7 +7,7 @@ import { FileModule } from './modules/file/file.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { RoleModule } from './modules/role/role.module';
 import * as path from 'path';
-console.info(path.resolve(__dirname, 'static'));
+
 @Module({
   imports: [
     ConfigModule.forRoot({
